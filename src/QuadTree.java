@@ -14,10 +14,10 @@ public class QuadTree {
     QuadTree southEast;
     boolean isDivided;
     Pane pane;
-    public QuadTree(Boundary b, int c, Pane p){
-        this.boundary = b;
-        this.capacity = c;
-        this.pane = p;
+    public QuadTree(Boundary boundary, int capacity, Pane pane){
+        this.boundary = boundary;
+        this.capacity = capacity;
+        this.pane = pane;
         this.boundary.setFill(Color.BLACK);
         this.boundary.setStroke(Color.color(Math.random(), Math.random(), Math.random()));
     }
@@ -33,15 +33,21 @@ public class QuadTree {
     }
 
     /**
+     * Check that point is in boundary and that point is not equal to any points currently in the tree.
      * Insert point into correct node in QuadTree, if QuadTree is at capacity, subdivide
      * @param point
      */
     public void insertPointHelper(Point point){
+        for (Point p : this.points){
+            if (p.compareTo(point)) return;
+        }
         if (!this.boundary.contains(point)){
             return;}
-        if (this.points.size() < this.capacity){
+
+        if (this.points.size() < this.capacity && !this.isDivided){
             this.points.add(point);
-        } else{
+        }
+        else{
             if (!this.isDivided){
                 subdivide();
             }
@@ -51,17 +57,23 @@ public class QuadTree {
             this.southWest.insertPointHelper(point);
         }
         if (this.isDivided){
-            for (int i=0; i<this.points.size(); i++){
-                Point p = this.points.remove(i);
+            int pointsLength = this.points.size();
+            for (int i=0; i<pointsLength; i++){
+                Point p = this.points.get(i);
                 this.northEast.insertPointHelper(p);
                 this.northWest.insertPointHelper(p);
                 this.southEast.insertPointHelper(p);
                 this.southWest.insertPointHelper(p);
             }
+            this.points.clear();
         }
     }
 
+    /**
+     * create a new QuadTree for each child, dump everything from points into children
+     */
     public void subdivide(){
+
         double x = this.boundary.xy[0];
         double y = this.boundary.xy[1];
         double w = this.boundary.wh[0];
@@ -78,7 +90,6 @@ public class QuadTree {
         this.southWest = new QuadTree(sw, this.capacity, this.pane);
         this.isDivided=true;
 
-
         this.northWest.boundary.setFill(Color.TRANSPARENT);
         this.northEast.boundary.setFill(Color.TRANSPARENT);
         this.southEast.boundary.setFill(Color.TRANSPARENT);
@@ -86,23 +97,46 @@ public class QuadTree {
         this.pane.getChildren().addAll(northWest.boundary, northEast.boundary, southWest.boundary, southEast.boundary);
     }
 
-    public ArrayList<Point> setTraverseListHelper(){
+    public ArrayList<Point> setTraverseListHelper(String indent){
         ArrayList<Point> traverseList = new ArrayList<>();
         if (this.isDivided){
-            traverseList.addAll(this.southWest.setTraverseListHelper());
-            traverseList.addAll(this.southEast.setTraverseListHelper());
-            traverseList.addAll(this.northWest.setTraverseListHelper());
-            traverseList.addAll(this.northEast.setTraverseListHelper());
+            traverseList.addAll(this.southWest.setTraverseListHelper(indent + "   "));
+            traverseList.addAll(this.southEast.setTraverseListHelper(indent + "   "));
+            traverseList.addAll(this.northWest.setTraverseListHelper(indent + "   "));
+            traverseList.addAll(this.northEast.setTraverseListHelper(indent + "   "));
         }
-        traverseList.addAll(points);
+        traverseList.addAll(this.points);
         return traverseList;
     }
     public void setTraverseList(){
-        this.traverseList = setTraverseListHelper();
+        this.traverseList = setTraverseListHelper("");
         for (Point p : this.traverseList){
             System.out.println(p);
         }
     }
+
+
+    @Override
+    public String toString(){return toString(this, new StringBuilder(), "");}
+    public String toString(QuadTree tree, StringBuilder toReturn, String recLevel){
+        recLevel = recLevel + "= ";
+        if (tree.isDivided){
+            toReturn.append(toString(tree.northEast, new StringBuilder(), recLevel));
+            toReturn.append(toString(tree.northWest, new StringBuilder(), recLevel));
+            toReturn.append(toString(tree.southEast, new StringBuilder(), recLevel));
+            toReturn.append(toString(tree.southWest, new StringBuilder(), recLevel));
+        }
+        else {
+            if (tree.points.size() > 0) toReturn.append("\n");
+            for (int i=0; i<tree.points.size(); i++){
+                if (i < tree.points.size()-1)toReturn.append(recLevel + tree.points.get(i) + "\n");
+                else toReturn.append(recLevel + tree.points.get(i));
+            }
+        }
+        return toReturn.toString();
+    }
+
+
 
 
 
