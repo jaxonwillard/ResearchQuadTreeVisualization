@@ -11,8 +11,10 @@ public class Graph extends Application {
     public void start(Stage stage){
         BorderPane borderPane = new BorderPane();
         Scene sc = new Scene(borderPane);
-        Boundary boundary = new Boundary(0,0,500,500);
-        QuadTree qt = new QuadTree(boundary, 1, borderPane);
+        double[] startCoords = {0,0};
+        double[] endCoords = {500,500};
+        Boundary boundary = new Boundary(startCoords, endCoords);
+        QuadTree qt = new QuadTree(boundary, 1, 2, borderPane);
         borderPane.setCenter(qt.boundary);
         HBox buttons = new HBox();
         Button printTree = new Button("Print Tree");
@@ -28,12 +30,12 @@ public class Graph extends Application {
 //            qt.insertPoint(new Point(qt.boundary.getWidth()));
 //            qt.insertPoint(new Point(i,i));
             }
-        qt.insertPoint(new Point(400,100));
-        qt.insertPoint(new Point(30,30));
-        qt.insertPoint(new Point(20, 400));
-        qt.insertPoint(new Point(20, 300));
-        qt.insertPoint(new Point(300,300));
-        qt.insertPoint(new Point(200, 200));
+//        qt.insertPoint(new Point(400,100));
+//        qt.insertPoint(new Point(30,30));
+//        qt.insertPoint(new Point(20, 400));
+//        qt.insertPoint(new Point(20, 300));
+//        qt.insertPoint(new Point(300,300));
+//        qt.insertPoint(new Point(200, 200));
         printTree.setOnMouseClicked(event -> {
             System.out.println(qt);
         });
