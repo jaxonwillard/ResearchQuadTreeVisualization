@@ -20,6 +20,7 @@ public class QuadTree {
         this.pane = pane;
         this.boundary.setFill(Color.BLACK);
         this.boundary.setStroke(Color.color(Math.random(), Math.random(), Math.random()));
+//        this.boundary.setStroke(Color.TRANSPARENT);
     }
 
     /**
@@ -72,7 +73,7 @@ public class QuadTree {
     /**
      * create a new QuadTree for each child, dump everything from points into children
      */
-    public void subdivide(){
+    void subdivide(){
 
         double x = this.boundary.xy[0];
         double y = this.boundary.xy[1];
@@ -97,19 +98,19 @@ public class QuadTree {
         this.pane.getChildren().addAll(northWest.boundary, northEast.boundary, southWest.boundary, southEast.boundary);
     }
 
-    public ArrayList<Point> setTraverseListHelper(String indent){
+    private ArrayList<Point> setTraverseListHelper(){
         ArrayList<Point> traverseList = new ArrayList<>();
         if (this.isDivided){
-            traverseList.addAll(this.southWest.setTraverseListHelper(indent + "   "));
-            traverseList.addAll(this.southEast.setTraverseListHelper(indent + "   "));
-            traverseList.addAll(this.northWest.setTraverseListHelper(indent + "   "));
-            traverseList.addAll(this.northEast.setTraverseListHelper(indent + "   "));
+            traverseList.addAll(this.southWest.setTraverseListHelper());
+            traverseList.addAll(this.southEast.setTraverseListHelper());
+            traverseList.addAll(this.northWest.setTraverseListHelper());
+            traverseList.addAll(this.northEast.setTraverseListHelper());
         }
         traverseList.addAll(this.points);
         return traverseList;
     }
-    public void setTraverseList(){
-        this.traverseList = setTraverseListHelper("");
+    void setTraverseList(){
+        this.traverseList = setTraverseListHelper();
         for (Point p : this.traverseList){
             System.out.println(p);
         }
@@ -118,7 +119,7 @@ public class QuadTree {
 
     @Override
     public String toString(){return toString(this, new StringBuilder(), "");}
-    public String toString(QuadTree tree, StringBuilder toReturn, String recLevel){
+    private String toString(QuadTree tree, StringBuilder toReturn, String recLevel){
         recLevel = recLevel + "= ";
         if (tree.isDivided){
             toReturn.append(toString(tree.northEast, new StringBuilder(), recLevel));

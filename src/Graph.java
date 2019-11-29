@@ -23,11 +23,17 @@ public class Graph extends Application {
         borderPane.setBottom(buttons);
         stage.setScene(sc);
         stage.show();
-        for (int i=0; i<20; i++){
+        for (int i=0; i<2000; i++){
 //            qt.insertPoint(new Point(200 + 100 * Math.sin(i) + Math.random() * 50, Math.random() * 50 + 200 + 100 * Math.cos(i)));
-            qt.insertPoint(new Point(qt.boundary.getWidth()));
+//            qt.insertPoint(new Point(qt.boundary.getWidth()));
 //            qt.insertPoint(new Point(i,i));
             }
+        qt.insertPoint(new Point(400,100));
+        qt.insertPoint(new Point(30,30));
+        qt.insertPoint(new Point(20, 400));
+        qt.insertPoint(new Point(20, 300));
+        qt.insertPoint(new Point(300,300));
+        qt.insertPoint(new Point(200, 200));
         printTree.setOnMouseClicked(event -> {
             System.out.println(qt);
         });
