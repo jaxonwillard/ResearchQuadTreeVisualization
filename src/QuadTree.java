@@ -1,9 +1,11 @@
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+
 import java.util.ArrayList;
 
 public class QuadTree {
-
+    boolean traverseSet;
     Boundary boundary;
     int capacity;
     ArrayList<Point> traverseList;
@@ -15,10 +17,11 @@ public class QuadTree {
     boolean isDivided;
     Pane pane;
     public QuadTree(Boundary boundary, int capacity, Pane pane){
+        this.traverseSet = false;
         this.boundary = boundary;
         this.capacity = capacity;
         this.pane = pane;
-        this.boundary.setFill(Color.BLACK);
+        this.boundary.setFill(Color.WHITE);
         this.boundary.setStroke(Color.color(Math.random(), Math.random(), Math.random()));
 //        this.boundary.setStroke(Color.TRANSPARENT);
     }
@@ -30,7 +33,9 @@ public class QuadTree {
     public void insertPoint(Point point){
         this.pane.getChildren().add(point);
         insertPointHelper(point);
-
+    }
+    public void insertText(Text text){
+        this.pane.getChildren().add(text);
     }
 
     /**

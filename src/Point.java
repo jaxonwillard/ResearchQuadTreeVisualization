@@ -7,12 +7,12 @@ import java.util.Formatter;
 public class Point extends Circle {
     double[] coordinates = new double[2];
     public Point(double x, double y){
-        super(x,y,1,Color.WHITE);
+        super(x,y,1.2,Color.BLACK);
         this.coordinates[0]=x;
         this.coordinates[1]=y;
     }
     public Point(double limit){
-        super(Math.random()*limit, Math.random()*limit,1,Color.WHITE);
+        super(Math.random()*limit, Math.random()*limit,1.2,Color.BLACK);
         this.coordinates[0]=this.getCenterX();
         this.coordinates[1]=this.getCenterY();
     }
