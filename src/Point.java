@@ -24,6 +24,8 @@ public class Point extends Circle {
     }
 
     public int getMyId() { return this.id; }
+    public double getX() { return this.coordinates[0]; }
+    public double getY() { return this.coordinates[1]; }
 
     @Override
     public String toString(){

@@ -35,7 +35,7 @@ public class QuadTree {
      * @param point
      */
     public void insertPoint(Point point){
-        // this.pane.getChildren().add(point);
+        this.pane.getChildren().add(point);
         insertPointHelper(point);
     }
     public void insertText(Text text){
@@ -155,9 +155,9 @@ public class QuadTree {
 
         for(int i = 0; i < numPoints; i++) {
             System.out.println("I am " + traverseList.get(i).getMyId()
-            + " and my parent was " + traverseList.get(i > 0 ? i - 1: null));
+            + " and my parent was " + traverseList.get(i > 0 ? i - 1: 0));
             builder.append(traverseList.get(i).getMyId()).append(",")
-                    .append(traverseList.get(i > 0 ? i - 1: null).getMyId()).append("\n");
+                    .append(traverseList.get(i > 0 ? i - 1: 0).getMyId()).append("\n");
         }
 
         Path file = Paths.get(filepath);

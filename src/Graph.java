@@ -7,19 +7,25 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 public class Graph extends Application {
     public void start(Stage stage){
         AtomicInteger textIteration = new AtomicInteger(1);
         BorderPane borderPane = new BorderPane();
         Scene sc = new Scene(borderPane);
-        Boundary boundary = new Boundary(0,0,500,500);
-        // Boundary boundary = new Boundary(-10, -10, 20, 20);
-        QuadTree qt = new QuadTree(boundary, 1, borderPane);
 
         String input =
                 "/Users/steven/Documents/school/honors/mag_phyx_vis/magPhyxVis/data1/commands";
-        // QuadTree qt = CSVParser.parseFromFile(input, 100, borderPane, boundary);
+        ArrayList<Point> points = CSVParser.parseFromFile(input, 100);
+        ArrayList<Point> normalized = Boundary.normalizePoints(points, 500, 500);
+        Boundary surroundingBoundary = Boundary.makeABoundary(normalized);
+        QuadTree qt = new QuadTree(surroundingBoundary, 1, borderPane);
+
+        for(Point point: normalized) {
+            qt.insertPoint(point);
+        }
 
         borderPane.setCenter(qt.boundary);
         HBox buttons = new HBox();
@@ -31,16 +37,13 @@ public class Graph extends Application {
         borderPane.setBottom(buttons);
         stage.setScene(sc);
         stage.show();
-        for (int i=0; i<10; i++){
-            qt.insertPoint(new Point(qt.boundary.getWidth()));
-        }
 
         printTree.setOnMouseClicked(event -> {
             System.out.println(qt);
         });
         borderPane.setOnMousePressed(event -> {
             if (!qt.traverseSet){
-            Point point1 = new Point(event.getX(), event.getY());
+            Point point1 = new Point(event.getX(), event.getY(), 9);
             qt.insertPoint(point1);}
             else{
                 Text text = new Text();

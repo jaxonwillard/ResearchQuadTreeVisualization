@@ -5,11 +5,10 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class CSVParser {
-    public static QuadTree parseFromFile(String folder, int numFiles, Pane pane, Boundary boundary) {
+    public static ArrayList<Point> parseFromFile(String folder, int numFiles) {
         String line = "";
         String cvsSplitBy = " ";
-        // Boundary boundary = new Boundary(-10, -10, 20, 20);
-        QuadTree quadTree = new QuadTree(boundary, 1, pane);
+        ArrayList<Point> originalPoints = new ArrayList<Point>();
 
         for(int i = 0; i < numFiles; i++) {
             String filepath = folder + "/commands" + String.format("%02d" , i) + ".csv";
@@ -24,7 +23,8 @@ public class CSVParser {
                     double theta = Double.parseDouble(params[9]);
                     double beta = Double.parseDouble(params[10]);
                     System.out.println("Theta = " + theta + " , beta = " + beta + "");
-                    quadTree.insertPoint(new Point(theta * -100, beta * 100, i));
+                    // quadTree.insertPoint(new Point(theta * 100, beta * 100, i));
+                    originalPoints.add(new Point(theta, beta, i));
                 }
 
             } catch (IOException e) {
@@ -32,7 +32,15 @@ public class CSVParser {
             }
 
         }
+        return originalPoints;
+
+        /*
+        ArrayList<Point> normalized = Boundary.normalizePoints(originalPoints, 500, 500);
+        for(Point point: normalized) {
+            quadTree.insertPoint(point);
+        }
 
        return quadTree;
+         */
     }
 }

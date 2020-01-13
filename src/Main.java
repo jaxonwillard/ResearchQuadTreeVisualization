@@ -1,16 +1,29 @@
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         System.out.println("Starting main");
         // Boundary boundary = new Boundary(-1, -1, 2, 2);
         // QuadTree quadTree = new QuadTree(boundary, 1);
-        Boundary boundary = new Boundary(-10, -10, 20, 20);
+        double visualWidth = 500;
+        double visualHeight = 500;
+        Boundary boundary = new Boundary(-6.0, -6.0, 12, 12);
         String input =
                 "/Users/steven/Documents/school/honors/mag_phyx_vis/magPhyxVis/data1/commands";
-        QuadTree quadTree = CSVParser.parseFromFile(input, 100, new BorderPane(), boundary);
+        ArrayList<Point> points = CSVParser.parseFromFile(input, 100);
+        ArrayList<Point> normalized = Boundary.normalizePoints(points, visualWidth, visualHeight);
+        Boundary surroundingBoundary = Boundary.makeABoundary(normalized);
+
+
+        QuadTree quadTree = new QuadTree(surroundingBoundary, 1, new BorderPane());
+
+        for(Point point: normalized) {
+            quadTree.insertPoint(point);
+        }
+
         quadTree.setTraverseList();
 
         String output =

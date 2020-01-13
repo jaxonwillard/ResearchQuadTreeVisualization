@@ -1,15 +1,52 @@
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
+
 public class Boundary extends Rectangle {
     double[] xy = new double[2];
     double[] wh = new double[2];
 
     Boundary(double x, double y, double w, double h) {
-        // super(x,y,w,h);
+        super(x,y,w,h);
         this.xy[0] = x;
         this.xy[1] = y;
         this.wh[0] = w;
         this.wh[1] = h;
+    }
+
+    public static Boundary makeABoundary(ArrayList<Point> points) {
+        double x_min = Double.MAX_VALUE;
+        double x_max = -Double.MAX_VALUE;
+        double y_min = Double.MAX_VALUE;
+        double y_max = -Double.MAX_VALUE;
+
+        for(Point point: points) {
+            if(point.getX() > x_max) { x_max = point.getX(); }
+            if(point.getY() > y_max) { y_max = point.getY(); }
+            if(point.getX() < x_min) { x_min = point.getX(); }
+            if(point.getY() < y_min) { y_min = point.getY(); }
+        }
+
+        double width = x_max - x_min;
+        double height = y_max - y_min;
+
+        return new Boundary(x_min, y_min, width, height);
+    }
+
+    public static ArrayList<Point> normalizePoints(ArrayList<Point> points, double width, double height) {
+        Boundary boundary = makeABoundary(points);
+        double xoffset = boundary.getX();
+        double yoffset = boundary.getY();
+        double xscale = width / boundary.getWidth();
+        double yscale = height / boundary.getHeight();
+
+        ArrayList<Point> normalized = new ArrayList<Point>();
+        for(Point point: points) {
+            normalized.add(
+                    new Point((point.getX() - xoffset) * xscale, (point.getY() - yoffset) * yscale, point.getMyId()));
+        }
+
+        return normalized;
     }
 
     public boolean contains(Point p){
