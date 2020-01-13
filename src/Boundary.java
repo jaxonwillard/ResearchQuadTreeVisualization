@@ -5,7 +5,7 @@ public class Boundary extends Rectangle {
     double[] wh = new double[2];
 
     Boundary(double x, double y, double w, double h) {
-        super(x,y,w,h);
+        // super(x,y,w,h);
         this.xy[0] = x;
         this.xy[1] = y;
         this.wh[0] = w;

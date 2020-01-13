@@ -2,7 +2,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class QuadTree {
     boolean traverseSet;
@@ -23,7 +28,6 @@ public class QuadTree {
         this.pane = pane;
         this.boundary.setFill(Color.WHITE);
         this.boundary.setStroke(Color.color(Math.random(), Math.random(), Math.random()));
-//        this.boundary.setStroke(Color.TRANSPARENT);
     }
 
     /**
@@ -31,7 +35,7 @@ public class QuadTree {
      * @param point
      */
     public void insertPoint(Point point){
-        this.pane.getChildren().add(point);
+        // this.pane.getChildren().add(point);
         insertPointHelper(point);
     }
     public void insertText(Text text){
@@ -48,6 +52,7 @@ public class QuadTree {
             if (p.compareTo(point)) return;
         }
         if (!this.boundary.contains(point)){
+            System.out.println("This boundary already contains the point " + point.getMyId());
             return;}
 
         if (this.points.size() < this.capacity && !this.isDivided){
@@ -79,6 +84,7 @@ public class QuadTree {
      * create a new QuadTree for each child, dump everything from points into children
      */
     void subdivide(){
+        System.out.println("Now subdividing");
 
         double x = this.boundary.xy[0];
         double y = this.boundary.xy[1];
@@ -142,11 +148,21 @@ public class QuadTree {
         return toReturn.toString();
     }
 
+    public void saveOrder(String filepath) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        int numPoints = traverseList.size();
+        builder.append("Id,parent\n");
 
+        for(int i = 0; i < numPoints; i++) {
+            System.out.println("I am " + traverseList.get(i).getMyId()
+            + " and my parent was " + traverseList.get(i > 0 ? i - 1: null));
+            builder.append(traverseList.get(i).getMyId()).append(",")
+                    .append(traverseList.get(i > 0 ? i - 1: null).getMyId()).append("\n");
+        }
 
-
-
-
-
+        Path file = Paths.get(filepath);
+        // builder.deleteCharAt(builder.length() - 1);
+        Files.write(file, Collections.singleton(builder));
+    }
 
 }

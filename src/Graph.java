@@ -14,7 +14,13 @@ public class Graph extends Application {
         BorderPane borderPane = new BorderPane();
         Scene sc = new Scene(borderPane);
         Boundary boundary = new Boundary(0,0,500,500);
+        // Boundary boundary = new Boundary(-10, -10, 20, 20);
         QuadTree qt = new QuadTree(boundary, 1, borderPane);
+
+        String input =
+                "/Users/steven/Documents/school/honors/mag_phyx_vis/magPhyxVis/data1/commands";
+        // QuadTree qt = CSVParser.parseFromFile(input, 100, borderPane, boundary);
+
         borderPane.setCenter(qt.boundary);
         HBox buttons = new HBox();
         Button printTree = new Button("Print Tree");
@@ -25,7 +31,7 @@ public class Graph extends Application {
         borderPane.setBottom(buttons);
         stage.setScene(sc);
         stage.show();
-        for (int i=0; i<0; i++){
+        for (int i=0; i<10; i++){
             qt.insertPoint(new Point(qt.boundary.getWidth()));
         }
 
