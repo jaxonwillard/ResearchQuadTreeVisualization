@@ -34,9 +34,9 @@ public class QuadTree {
      * Add point to pane and insert point into QuadTree
      * @param point
      */
-    public void insertPoint(Point point){
+    public boolean insertPoint(Point point){
         this.pane.getChildren().add(point);
-        insertPointHelper(point);
+        return insertPointHelper(point);
     }
     public void insertText(Text text){
         this.pane.getChildren().add(text);
@@ -47,45 +47,48 @@ public class QuadTree {
      * Insert point into correct node in QuadTree, if QuadTree is at capacity, subdivide
      * @param point
      */
-    public void insertPointHelper(Point point){
+    public boolean insertPointHelper(Point point){
         for (Point p : this.points){
-            if (p.compareTo(point)) return;
+            if (p.compareTo(point)){
+                return false;
+            }
         }
         if (!this.boundary.contains(point)){
-            System.out.println("This boundary already contains the point " + point.getMyId());
-            return;}
+            return false;
+        }
+        boolean inserted = false;
 
         if (this.points.size() < this.capacity && !this.isDivided){
             this.points.add(point);
+            inserted = true;
         }
         else{
             if (!this.isDivided){
                 subdivide();
             }
-            this.northEast.insertPointHelper(point);
-            this.northWest.insertPointHelper(point);
-            this.southEast.insertPointHelper(point);
-            this.southWest.insertPointHelper(point);
+            inserted |= this.northEast.insertPointHelper(point);
+            inserted |= this.northWest.insertPointHelper(point);
+            inserted |= this.southEast.insertPointHelper(point);
+            inserted |= this.southWest.insertPointHelper(point);
         }
         if (this.isDivided){
             int pointsLength = this.points.size();
             for (int i=0; i<pointsLength; i++){
                 Point p = this.points.get(i);
-                this.northEast.insertPointHelper(p);
-                this.northWest.insertPointHelper(p);
-                this.southEast.insertPointHelper(p);
-                this.southWest.insertPointHelper(p);
+                inserted |= this.northEast.insertPointHelper(p);
+                inserted |= this.northWest.insertPointHelper(p);
+                inserted |= this.southEast.insertPointHelper(p);
+                inserted |= this.southWest.insertPointHelper(p);
             }
             this.points.clear();
         }
+        return inserted;
     }
 
     /**
      * create a new QuadTree for each child, dump everything from points into children
      */
     void subdivide(){
-        System.out.println("Now subdividing");
-
         double x = this.boundary.xy[0];
         double y = this.boundary.xy[1];
         double w = this.boundary.wh[0];
@@ -151,17 +154,17 @@ public class QuadTree {
     public void saveOrder(String filepath) throws IOException {
         StringBuilder builder = new StringBuilder();
         int numPoints = traverseList.size();
-        builder.append("Id,parent\n");
+        builder.append("Id\n");
 
-        for(int i = 0; i < numPoints; i++) {
-            System.out.println("I am " + traverseList.get(i).getMyId()
-            + " and my parent was " + traverseList.get(i > 0 ? i - 1: 0));
-            builder.append(traverseList.get(i).getMyId()).append(",")
-                    .append(traverseList.get(i > 0 ? i - 1: 0).getMyId()).append("\n");
-        }
+        for(Point point: traverseList) {
+            for(int j = 0; j < numPoints; j++) {
+                if(j == point.getMyId()) {
+                    builder.append(point.getMyId()).append("\n");
+                }
+            }
+       }
 
         Path file = Paths.get(filepath);
-        // builder.deleteCharAt(builder.length() - 1);
         Files.write(file, Collections.singleton(builder));
     }
 

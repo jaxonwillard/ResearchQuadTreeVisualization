@@ -8,7 +8,7 @@ public class CSVParser {
     public static ArrayList<Point> parseFromFile(String folder, int numFiles) {
         String line = "";
         String cvsSplitBy = " ";
-        ArrayList<Point> originalPoints = new ArrayList<Point>();
+        ArrayList<Point> originalPoints = new ArrayList<>();
 
         for(int i = 0; i < numFiles; i++) {
             String filepath = folder + "/commands" + String.format("%02d" , i) + ".csv";
@@ -23,7 +23,6 @@ public class CSVParser {
                     double theta = Double.parseDouble(params[9]);
                     double beta = Double.parseDouble(params[10]);
                     System.out.println("Theta = " + theta + " , beta = " + beta + "");
-                    // quadTree.insertPoint(new Point(theta * 100, beta * 100, i));
                     originalPoints.add(new Point(theta, beta, i));
                 }
 
@@ -33,14 +32,5 @@ public class CSVParser {
 
         }
         return originalPoints;
-
-        /*
-        ArrayList<Point> normalized = Boundary.normalizePoints(originalPoints, 500, 500);
-        for(Point point: normalized) {
-            quadTree.insertPoint(point);
-        }
-
-       return quadTree;
-         */
-    }
+   }
 }

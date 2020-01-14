@@ -34,16 +34,24 @@ public class Boundary extends Rectangle {
     }
 
     public static ArrayList<Point> normalizePoints(ArrayList<Point> points, double width, double height) {
+        final double epsilon = 2.002;
         Boundary boundary = makeABoundary(points);
         double xoffset = boundary.getX();
         double yoffset = boundary.getY();
         double xscale = width / boundary.getWidth();
         double yscale = height / boundary.getHeight();
 
-        ArrayList<Point> normalized = new ArrayList<Point>();
+        boundary.xy[0] = boundary.getX() - epsilon;
+        boundary.xy[1] = boundary.getY() - epsilon;
+        boundary.wh[0] = boundary.getWidth() + 2 * epsilon;
+        boundary.wh[1] = boundary.getHeight() + 2 * epsilon;
+
+        ArrayList<Point> normalized = new ArrayList<>();
         for(Point point: points) {
-            normalized.add(
-                    new Point((point.getX() - xoffset) * xscale, (point.getY() - yoffset) * yscale, point.getMyId()));
+            normalized.add(new Point(
+                (point.getX() - xoffset) * xscale,
+                (point.getY() - yoffset) * yscale,
+                    point.getMyId()));
         }
 
         return normalized;
